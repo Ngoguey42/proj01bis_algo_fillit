@@ -84,14 +84,18 @@ endif
 # Rules
 
 # Default rule (need to be before any include)
-all: _all
+all: _all1
 
 # Include $(O_FILES) and dependencies
 -include $(DEPEND)
 
-_all: $(MODULE_RULES)
-	$(MAKE) libs $(O_FILES)
-	$(MAKE) $(NAME)
+_all1: $(MODULE_RULES)
+	$(MAKE) _all2
+
+_all2: libs $(O_FILES)
+	$(MAKE) _all3
+
+_all3: $(NAME)
 
 # Linking
 $(NAME): $(LIBS_DEPEND) $(O_FILES)
@@ -128,4 +132,4 @@ re: fclean
 # Special targets
 
 .SILENT:
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re _all1 _all2 _all3
