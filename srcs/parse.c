@@ -6,7 +6,7 @@
 /*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/18 11:04:11 by ngoguey           #+#    #+#             */
-/*   Updated: 2016/02/18 12:05:40 by ngoguey          ###   ########.fr       */
+/*   Updated: 2016/02/22 11:12:51 by angagnie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <stdlib.h>
 #include <fcntl.h>
 
-extern t_piece const pcs[19];
+extern t_piece const g_pcs[19];
 
 static bool			charsValid(char const buf[(4 + 1) * 4])
 {
@@ -72,10 +72,17 @@ static bool			match_piece(
 		y = tl.y + pc->dt[dt].y;
 		x = tl.x + pc->dt[dt].x;
 		if (x >= 4 || y >= 4 || val[y * 5 + x] != '#')
-			return false;
+			return (false);
 	}
-	return true;
+	return (true);
 }
+
+/*
+** ...#
+** ....
+** ....		->	(0,0) !!!!
+** #...
+*/
 
 static t_vec2i		calc_top_left(char const val[(4 + 1) * 4])
 {
@@ -86,26 +93,26 @@ static t_vec2i		calc_top_left(char const val[(4 + 1) * 4])
 
 	minx = 4;
 	miny = 4;
-	for (y = 0; y < 4; y++)
+	y = -1;
+	while (++y < 4)
 	{
-		for (x = 0; x < 4; x++)
-		{
+		x = -1;
+		while (++x < 4)
 			if (val[y * 5 + x] == '#')
 			{
 				minx = MIN(x, minx);
 				miny = MIN(y, miny);
 			}
-		}
 	}
-	return (t_vec2i){minx, miny};
+	return ((t_vec2i){minx, miny});
 }
 
 static void			save_piece(char const val[(4 + 1) * 4], t_ppool p[1])
 {
-	t_piece const	*pc = pcs;
+	t_piece const	*pc = g_pcs;
 	t_vec2i const	topleft = calc_top_left(val);
 
-	while ((void*)pc < END_ARRAY(pcs))
+	while ((void*)pc < END_ARRAY(g_pcs))
 	{
 		if (match_piece(val, pc, topleft))
 		{
