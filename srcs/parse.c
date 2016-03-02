@@ -6,7 +6,7 @@
 /*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/18 11:04:11 by ngoguey           #+#    #+#             */
-/*   Updated: 2016/02/22 11:12:51 by angagnie         ###   ########.fr       */
+/*   Updated: 2016/03/02 17:20:11 by angagnie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,46 +18,46 @@
 
 extern t_piece const g_pcs[19];
 
-static bool			charsValid(char const buf[(4 + 1) * 4])
+static bool			chars_valid(char const buf[(4 + 1) * 4])
 {
 	int				sharp_count;
 	int				x;
 	int				y;
 
 	sharp_count = 0;
-	for (y = 0; y < 4; y++)
+	y = 4;
+	while (y-- > 0 && (x = 4))
 	{
-		for (x = 0; x < 4; x++)
-		{
+		while (x-- > 0)
 			if (buf[y * 5 + x] == '#')
 				sharp_count++;
 			else if (buf[y * 5 + x] != '.')
-				return (qprintf("FAILED LINE %d", __LINE__), false);
-		}
+				return (false);
 		if (buf[y * 5 + 4] != '\n')
-			return (qprintf("FAILED LINE %d", __LINE__), false);
+			return (false);
 	}
 	if (sharp_count != 4)
-		return (qprintf("FAILED LINE %d", __LINE__), false);
-	return true;
+		return (false);
+	return (true);
 }
 
-static unsigned int	adjDiff(char const val[(4 + 1) * 4])
+static unsigned int	adj_diff(char const val[(4 + 1) * 4])
 {
-	unsigned int    acc;
+	unsigned int	acc;
 	int				x;
 	int				y;
 
 	acc = 0;
-	for (y = 0; y < 4; y++)
-		for (x = 0; x < 3; x++)
+	y = 4;
+	while (y-- > 0 && (x = 3))
+		while (x-- > 0)
+		{
 			if (val[y * 5 + x] == '#' && val[y * 5 + x + 1] == '#')
 				acc++;
-	for (y = 0; y < 3; y++)
-		for (x = 0; x < 4; x++)
-			if (val[y * 5 + x] == '#' && val[(y + 1) * 5 + x] == '#')
+			if (val[x * 5 + y] == '#' && val[(x + 1) * 5 + y] == '#')
 				acc++;
-	return acc;
+		}
+	return (acc);
 }
 
 static bool			match_piece(
@@ -67,7 +67,8 @@ static bool			match_piece(
 	int		y;
 	int		dt;
 
-	for (dt = 0; dt < 4; dt++)
+	dt = 4;
+	while (dt-- > 0)
 	{
 		y = tl.y + pc->dt[dt].y;
 		x = tl.x + pc->dt[dt].x;
@@ -121,7 +122,6 @@ static void			save_piece(char const val[(4 + 1) * 4], t_ppool p[1])
 		}
 		pc++;
 	}
-	qprintf("FAILED LINE %d", __LINE__);
 	return ;
 }
 
@@ -139,15 +139,15 @@ int					flt_parse(char const *fname, t_ppool p[1])
 		i += ret;
 		if (i == sizeof(buf1))
 		{
-			if (!charsValid(buf1) || adjDiff(buf1) < 3)
-				return (qprintf("FAILED LINE %d", __LINE__), 1);
+			if (!chars_valid(buf1) || adj_diff(buf1) < 3)
+				return (1);
 			save_piece(buf1, p);
 			p->lastpid++;
 			ret = read(fd, buf2, 1);
 			if (ret == 0)
 				break ;
 			else if (ret < 0 || *buf2 != '\n')
-				return (qprintf("FAILED LINE %d", __LINE__), 1);
+				return (1);
 			i = 0;
 		}
 	}

@@ -6,7 +6,7 @@
 /*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/18 11:14:45 by ngoguey           #+#    #+#             */
-/*   Updated: 2016/02/18 11:33:07 by ngoguey          ###   ########.fr       */
+/*   Updated: 2016/03/02 15:58:21 by angagnie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static bool		loop(
 				if (pid == pool->lastpid || loop(m | pmask, pool, w, pid + 1))
 				{
 					pool->pcs[pid].finalpos = c;
-					return true;
+					return (true);
 				}
 			}
 			pmask <<= 1;
@@ -39,10 +39,10 @@ static bool		loop(
 		}
 		c.y++;
 	}
-	return false;
+	return (false);
 }
 
-bool		flt_solve128(
+bool			flt_solve128(
 	uintmax_t const m, t_ppool *const pool, int const w, int const pid)
 {
 	return (loop(m, pool, w, pid));
