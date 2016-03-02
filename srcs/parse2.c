@@ -6,7 +6,7 @@
 /*   By: angagnie <angagnie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/02 19:01:46 by angagnie          #+#    #+#             */
-/*   Updated: 2016/03/02 19:08:45 by angagnie         ###   ########.fr       */
+/*   Updated: 2016/03/02 20:08:59 by angagnie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,4 +40,27 @@ t_vec2i		calc_top_left(char const val[(4 + 1) * 4])
 			}
 	}
 	return ((t_vec2i){minx, miny});
+}
+
+bool		chars_valid(char const buf[(4 + 1) * 4])
+{
+	int		sharp_count;
+	int		x;
+	int		y;
+
+	sharp_count = 0;
+	y = 4;
+	while (y-- > 0 && (x = 4))
+	{
+		while (x-- > 0)
+			if (buf[y * 5 + x] == '#')
+				sharp_count++;
+			else if (buf[y * 5 + x] != '.')
+				return (false);
+		if (buf[y * 5 + 4] != '\n')
+			return (false);
+	}
+	if (sharp_count != 4)
+		return (false);
+	return (true);
 }

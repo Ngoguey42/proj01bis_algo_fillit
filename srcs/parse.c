@@ -6,7 +6,7 @@
 /*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/18 11:04:11 by ngoguey           #+#    #+#             */
-/*   Updated: 2016/03/02 19:02:41 by angagnie         ###   ########.fr       */
+/*   Updated: 2016/03/02 20:12:36 by angagnie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,29 +17,6 @@
 #include <fcntl.h>
 
 extern t_piece const g_pcs[19];
-
-static bool			chars_valid(char const buf[(4 + 1) * 4])
-{
-	int				sharp_count;
-	int				x;
-	int				y;
-
-	sharp_count = 0;
-	y = 4;
-	while (y-- > 0 && (x = 4))
-	{
-		while (x-- > 0)
-			if (buf[y * 5 + x] == '#')
-				sharp_count++;
-			else if (buf[y * 5 + x] != '.')
-				return (false);
-		if (buf[y * 5 + 4] != '\n')
-			return (false);
-	}
-	if (sharp_count != 4)
-		return (false);
-	return (true);
-}
 
 static unsigned int	adj_diff(char const val[(4 + 1) * 4])
 {
@@ -113,8 +90,7 @@ int					flt_parse(char const *fname, t_ppool p[1])
 				return (1);
 			save_piece(buf1, p);
 			p->lastpid++;
-			ret = read(fd, buf2, 1);
-			if (ret == 0)
+			if (!(ret = read(fd, buf2, 1)))
 				break ;
 			else if (ret < 0 || *buf2 != '\n')
 				return (1);
@@ -122,6 +98,5 @@ int					flt_parse(char const *fname, t_ppool p[1])
 		}
 	}
 	p->lastpid--;
-	close(fd);
-	return (0);
+	return (close(fd));
 }

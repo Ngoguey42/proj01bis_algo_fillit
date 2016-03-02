@@ -17,7 +17,7 @@ O_DIR			:= obj
 
 # ============================================================================ #
 # Default  flags / compilers
-BASE_FLAGS		= -Wall -Wextra
+BASE_FLAGS		= -Wall -Wextra -Werror
 HEAD_FLAGS		= $(addprefix -I,$(INCLUDE_DIRS))
 LD_FLAGS		= $(BASE_FLAGS) -Llibft -lft
 

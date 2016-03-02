@@ -6,7 +6,7 @@
 /*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/18 11:02:41 by ngoguey           #+#    #+#             */
-/*   Updated: 2016/03/02 19:38:57 by angagnie         ###   ########.fr       */
+/*   Updated: 2016/03/02 20:09:43 by angagnie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,10 @@ typedef struct	s_ppool
 	int			lastpid;
 }				t_ppool;
 
-int				flt_parse(char const *fname, t_ppool p[1]);
 t_vec2i			calc_top_left(char const val[(4 + 1) * 4]);
+bool			chars_valid(char const buf[(4 + 1) * 4]);
+
+int				flt_parse(char const *fname, t_ppool p[1]);
 void			flt_solve(t_ppool *pool);
 bool			flt_solve64(
 	uintmax_t const m, t_ppool *const pool, int const w, int const pid);
