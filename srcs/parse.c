@@ -6,7 +6,7 @@
 /*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/18 11:04:11 by ngoguey           #+#    #+#             */
-/*   Updated: 2016/03/02 17:20:11 by angagnie         ###   ########.fr       */
+/*   Updated: 2016/03/02 19:02:41 by angagnie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,36 +76,6 @@ static bool			match_piece(
 			return (false);
 	}
 	return (true);
-}
-
-/*
-** ...#
-** ....
-** ....		->	(0,0) !!!!
-** #...
-*/
-
-static t_vec2i		calc_top_left(char const val[(4 + 1) * 4])
-{
-	int				x;
-	int				y;
-	int				minx;
-	int				miny;
-
-	minx = 4;
-	miny = 4;
-	y = -1;
-	while (++y < 4)
-	{
-		x = -1;
-		while (++x < 4)
-			if (val[y * 5 + x] == '#')
-			{
-				minx = MIN(x, minx);
-				miny = MIN(y, miny);
-			}
-	}
-	return ((t_vec2i){minx, miny});
 }
 
 static void			save_piece(char const val[(4 + 1) * 4], t_ppool p[1])

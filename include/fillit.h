@@ -6,7 +6,7 @@
 /*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/18 11:02:41 by ngoguey           #+#    #+#             */
-/*   Updated: 2016/02/18 14:52:28 by ngoguey          ###   ########.fr       */
+/*   Updated: 2016/03/02 19:38:57 by angagnie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,8 @@
 ** changer les fonctions de string.h pour libft.h
 */
 # include "libft.h"
-# include "ft_debug.h" //remove
 
-# include <time.h> //REMOVE
-# include <string.h> //REMOVE
-# include <assert.h> //TO REMOVE LATER
-
-typedef struct	s_vec2i //FROM LIBFT?
+typedef struct	s_vec2i
 {
 	int			x;
 	int			y;
@@ -39,7 +34,11 @@ typedef struct	s_vec2i //FROM LIBFT?
 ** Shape ID
 */
 
-typedef struct
+# define MAP_W 13
+
+typedef char	t_map[MAP_W][MAP_W];
+
+typedef struct	s_piece
 {
 	int			sid;
 	uintmax_t	mask;
@@ -51,17 +50,14 @@ typedef struct
 	char		character;
 }				t_piece;
 
-# define MAP_W 13
-
-typedef char		t_map[MAP_W][MAP_W];
-
-typedef struct
+typedef struct	s_ppool
 {
 	t_piece		pcs[27];
 	int			lastpid;
 }				t_ppool;
 
 int				flt_parse(char const *fname, t_ppool p[1]);
+t_vec2i			calc_top_left(char const val[(4 + 1) * 4]);
 void			flt_solve(t_ppool *pool);
 bool			flt_solve64(
 	uintmax_t const m, t_ppool *const pool, int const w, int const pid);
@@ -71,44 +67,6 @@ bool			flt_solve128_plus(
 	uintmax_t const m, t_ppool *const pool, int const w, int const pid);
 bool			flt_solveptr(
 	t_map m, t_ppool *const pool, int const w, int const pid);
-
-
-/*
-**	Test session: (TimeOut at 1sec), vs https://github.com/LeGuit/fillit
-**
-** debug flt_solveptr:
-**		1x113	OK
-**		2x3000	2.688ms(avg)
-**		8x1000	3.603ms(avg)
-**		11x200	29.478ms(avg)
-**		15x200	?
-**		26x200	216.332ms(avg)	32TimeOuts
-**
-** debug flt_solve64:
-**		1x113	OK
-**		2x3000	3.974ms(avg)
-**		8x1000	3.163ms(avg)
-**		11x200	11.917ms(avg)
-**		15x200	489.947ms(avg)	77TimeOuts
-**		26x200	N/A
-**
-** debug flt_solve128:
-**		1x113	OK
-**		2x3000	2.59ms(avg)
-**		8x1000	3.544ms(avg)
-**		11x200	20.919ms(avg)
-**		15x200	?
-**		26x200	181.893ms(avg)	20TimeOuts
-**
-** debug flt_solve128_plus:
-**		1x113	OK
-**		2x3000	2.799ms(avg)
-**		8x1000	5.158ms(avg)
-**		11x200	37.138ms(avg)	2TimeOuts
-**		15x200	598.642ms(avg)	90TimeOuts
-**		26x200	200.848ms(avg)	29TimeOuts
-**
-*/
 
 /*
 ** 3 4.000000

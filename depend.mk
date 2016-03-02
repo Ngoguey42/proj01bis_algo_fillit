@@ -1,6 +1,6 @@
 O_FILES :=	obj/srcs/main.o obj/srcs/parse.o obj/srcs/solve.o \
 			obj/srcs/solve128.o obj/srcs/solve128_plus.o obj/srcs/solve64.o \
-			obj/srcs/solveptr.o
+			obj/srcs/solveptr.o obj/srcs/parse2.o
 
 LIBS_DEPEND := libft/libft.a
 

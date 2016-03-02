@@ -6,7 +6,7 @@
 /*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/18 11:59:12 by ngoguey           #+#    #+#             */
-/*   Updated: 2016/02/22 11:06:12 by angagnie         ###   ########.fr       */
+/*   Updated: 2016/03/02 19:14:19 by angagnie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ int				main(int ac, char *av[])
 {
 	t_ppool		pool;
 	int			i;
-	clock_t		p1;
 
 	ft_bzero(&pool, sizeof(pool));
 	if (ac != 2)
@@ -53,7 +52,6 @@ int				main(int ac, char *av[])
 		i = 'A' - 1;
 		while (++i <= 'Z')
 			pool.pcs[i - 'A'].character = i;
-		p1 = clock();
 		flt_solve(&pool);
 	}
 	return (0);
