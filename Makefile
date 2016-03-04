@@ -3,49 +3,43 @@
 # ============================================================================ #
 # Directories
 
-# Executable name
-NAME			:= fillit
 # Git submodule to init
-MODULES			:= libft
-# Makefiles to call
-LIBS			:= libft
+MODULES					:= libft
+# include search path for .o dependencies
+MKGEN_INCLUDESDIRS		:= include libft/include
+# Obj files directory
+MKGEN_OBJDIR			:= obj
+# Source files directories
+MKGEN_SRCSDIRS_DEFAULT	:= srcs
 
-INCLUDE_DIRS	= include libft/include
-SRCS_DIRS		= srcs
-O_DIR			:= obj
-
+# mkgen -> MKGEN_SRCSBIN_* variables
+# mkgen -> $(MKGEN_OBJDIR)/**/*.o rules
 
 # ============================================================================ #
-# Default  flags / compilers
+# Default  flags
 BASE_FLAGS		= -Wall -Wextra -Werror
-HEAD_FLAGS		= $(addprefix -I,$(INCLUDE_DIRS))
-LD_FLAGS		= $(BASE_FLAGS) -Llibft -lft
-
-CC_LD			= $(CC_C)
+HEAD_FLAGS		= $(addprefix -I,$(INCLUDEDIRS))
+LD_FLAGS		= $(BASE_FLAGS) -Llibft -lft -o $@
 
 MAKEFLAGS		+= -j
 
 
 # ============================================================================ #
 # Build mode
-BUILD_MODE		= build
-ifeq ($(BUILD_MODE),test)
-	SRCS_DIRS		+= srcs_test
-	LD_FLAGS		+= -lboost_unit_test_framework
-	BASE_FLAGS		+=
-else ifeq ($(BUILD_MODE),debug)
-	SRCS_DIRS		+= srcs_build
-	BASE_FLAGS		+= -g
-else
-	SRCS_DIRS		+= srcs_build
-	BASE_FLAGS		+=
-endif
+#	NAME		link; target
+#	CC_LD		link; ld
+#	LIBSBIN		link; dependancies
+#	LIBSMAKE	separate compilation; makefiles to call
+#	SRCSBIN		separate compilation; sources
+#	INCLUDEDIRS	separate compilation; sources includes path
 
-# legacy with makemake ===========================
-DIRS			:= srcs srcs_build
-# DEBUG_MODE		?= 0
-# export DEBUG_MODE
-# /legacy with makemake ===========================
+NAME			:= fillit
+CC_LD			= $(CC_C)
+LIBSBIN			= libft/libft.a
+LIBSMAKE		= libft
+SRCSBIN			= $(MKGEN_SRCSBIN_DEFAULT) #gen by mkgen
+INCLUDEDIRS		= $(MKGEN_INCLUDESDIRS)
+BASE_FLAGS		+=
 
 
 # ============================================================================ #
@@ -61,7 +55,7 @@ SHELL			:= /bin/bash
 # ============================================================================ #
 # C
 C_FLAGS			= $(HEAD_FLAGS) $(BASE_FLAGS)
-ifeq ($(UNAME),Cygwin)
+ifeq ($(UNAME),CYGWIN)
 	CC_C		= x86_64-w64-mingw32-gcc
 else
 	CC_C		= clang
@@ -71,7 +65,7 @@ endif
 # ============================================================================ #
 # C++
 CPP_FLAGS		= $(HEAD_FLAGS) $(BASE_FLAGS) -std=c++14
-ifeq ($(UNAME),Cygwin)
+ifeq ($(UNAME),CYGWIN)
 	CC_CPP		= x86_64-w64-mingw32-g++
 	LD_FLAGS	+= -static
 else
@@ -79,32 +73,32 @@ else
 endif
 
 
-
 # ============================================================================ #
 # Rules
+# Default rule (needed to be before any include)
+all: _all_git
 
-# Default rule (need to be before any include)
-all: _all1
-
-# Include $(O_FILES) and dependencies
 -include $(DEPEND)
 
-_all1: $(MODULE_RULES)
-	$(MAKE) _all2
+_all_git: $(MODULE_RULES)
+	$(MAKE) _all_libs
 
-_all2: libs $(O_FILES)
-	$(MAKE) _all3
+_all_libs: $(LIBSMAKE)
+	$(MAKE) _all_separate_compilation
 
-_all3: $(NAME)
+_all_separate_compilation: $(SRCSBIN)
+	$(MAKE) _all_linkage
+
+_all_linkage: $(NAME)
 
 # Linking
-$(NAME): $(LIBS_DEPEND) $(O_FILES)
-	$(CC_LD) -o $@ $(O_FILES) $(LD_FLAGS) && $(PRINT_LINK)
+$(NAME): $(LIBSBIN) $(SRCSBIN)
+	$(CC_LD) $(LD_FLAGS) $(SRCSBIN) && $(PRINT_LINK)
 
 # Compiling
-$(O_DIR)/%.o: %.c
+$(MKGEN_OBJDIR)/%.o: %.c
 	$(CC_C) $(C_FLAGS) -c $< -o $@ && $(PRINT_OK)
-$(O_DIR)/%.o: %.cpp
+$(MKGEN_OBJDIR)/%.o: %.cpp
 	$(CC_CPP) $(CPP_FLAGS) -c $< -o $@ && $(PRINT_OK)
 
 # Init submodules
@@ -112,13 +106,17 @@ $(MODULE_RULES):
 	git submodule init $(@:.git=)
 	git submodule update $(@:.git=)
 
+# Compile libs
+$(LIBSMAKE):
+	$(MAKE) -C $@
+
 # Create obj directories
-$(O_DIR)/%/:
+$(MKGEN_OBJDIR)/%/:
 	mkdir -p $@
 
 # Clean obj files
 clean:
-	rm -f $(O_FILES)
+	rm -f $(SRCSBIN)
 
 # Clean everything
 fclean: clean
@@ -128,8 +126,8 @@ fclean: clean
 re: fclean
 	$(MAKE) all
 
+
 # ============================================================================ #
 # Special targets
-
 .SILENT:
-.PHONY: all clean fclean re _all1 _all2 _all3
+.PHONY: all clean fclean re _all_git _all_libs _all_separate_compilation _all_linkage $(LIBSMAKE)

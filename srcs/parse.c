@@ -6,7 +6,7 @@
 /*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/18 11:04:11 by ngoguey           #+#    #+#             */
-/*   Updated: 2016/03/02 20:12:36 by angagnie         ###   ########.fr       */
+/*   Updated: 2016/03/04 14:42:08 by ngoguey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 #include <unistd.h>
 #include <stdlib.h>
-#include <fcntl.h>
 
 extern t_piece const g_pcs[19];
 
@@ -72,9 +71,8 @@ static void			save_piece(char const val[(4 + 1) * 4], t_ppool p[1])
 	return ;
 }
 
-int					flt_parse(char const *fname, t_ppool p[1])
+int					flt_parse(int fd, t_ppool p[1])
 {
-	int const	fd = open(fname, O_RDONLY);
 	char		buf1[(4 + 1) * 4];
 	char		buf2[1];
 	int			ret;
@@ -86,17 +84,17 @@ int					flt_parse(char const *fname, t_ppool p[1])
 		i += ret;
 		if (i == sizeof(buf1))
 		{
+			i = 0;
 			if (!chars_valid(buf1) || adj_diff(buf1) < 3)
 				return (1);
 			save_piece(buf1, p);
 			p->lastpid++;
-			if (!(ret = read(fd, buf2, 1)))
+			if ((ret = read(fd, buf2, 1)) == 0)
 				break ;
 			else if (ret < 0 || *buf2 != '\n')
 				return (1);
-			i = 0;
 		}
 	}
 	p->lastpid--;
-	return (close(fd));
+	return (close(fd) || p->lastpid < 0 || p->lastpid > 25 || ret < 0);
 }

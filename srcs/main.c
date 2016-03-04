@@ -6,13 +6,14 @@
 /*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/18 11:59:12 by ngoguey           #+#    #+#             */
-/*   Updated: 2016/03/02 19:14:19 by angagnie         ###   ########.fr       */
+/*   Updated: 2016/03/04 14:21:23 by ngoguey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fillit.h"
 
-#include "stdlib.h"
+#include <fcntl.h>
+#include <stdlib.h>
 
 t_piece const	g_pcs[] = {
 	{0, 0x10302, 0x401802, 2, 3, {{1, 0}, {0, 1}, {1, 1}, {0, 2}}, {0, 0}, 0},
@@ -41,18 +42,23 @@ int				main(int ac, char *av[])
 {
 	t_ppool		pool;
 	int			i;
+	int			fd;
 
 	ft_bzero(&pool, sizeof(pool));
 	if (ac != 2)
-		ft_putstr("usage : ./fillit data_file\n");
-	else if (flt_parse(av[1], &pool))
-		ft_putstr("error\n");
-	else
 	{
-		i = 'A' - 1;
-		while (++i <= 'Z')
-			pool.pcs[i - 'A'].character = i;
-		flt_solve(&pool);
+		ft_putstr("usage : ./fillit data_file\n");
+		return (1);
 	}
+	fd = open(av[1], O_RDONLY);
+	if (fd < 0 || flt_parse(fd, &pool))
+	{
+		ft_putstr("error\n");
+		return (1);
+	}
+	i = 'A' - 1;
+	while (++i <= 'Z')
+		pool.pcs[i - 'A'].character = i;
+	flt_solve(&pool);
 	return (0);
 }
