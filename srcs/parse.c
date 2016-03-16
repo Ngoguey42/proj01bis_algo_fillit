@@ -6,14 +6,13 @@
 /*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/18 11:04:11 by ngoguey           #+#    #+#             */
-/*   Updated: 2016/03/04 14:42:08 by ngoguey          ###   ########.fr       */
+/*   Updated: 2016/03/16 11:22:02 by ngoguey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fillit.h"
 
 #include <unistd.h>
-#include <stdlib.h>
 
 extern t_piece const g_pcs[19];
 
@@ -96,5 +95,5 @@ int					flt_parse(int fd, t_ppool p[1])
 		}
 	}
 	p->lastpid--;
-	return (close(fd) || p->lastpid < 0 || p->lastpid > 25 || ret < 0);
+	return (p->lastpid < 0 || p->lastpid > 25 || ret < 0 || i != 0);
 }

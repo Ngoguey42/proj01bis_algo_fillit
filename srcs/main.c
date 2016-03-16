@@ -6,14 +6,14 @@
 /*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/18 11:59:12 by ngoguey           #+#    #+#             */
-/*   Updated: 2016/03/04 14:21:23 by ngoguey          ###   ########.fr       */
+/*   Updated: 2016/03/16 11:22:15 by ngoguey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fillit.h"
 
 #include <fcntl.h>
-#include <stdlib.h>
+#include <unistd.h>
 
 t_piece const	g_pcs[] = {
 	{0, 0x10302, 0x401802, 2, 3, {{1, 0}, {0, 1}, {1, 1}, {0, 2}}, {0, 0}, 0},
@@ -56,6 +56,7 @@ int				main(int ac, char *av[])
 		ft_putstr("error\n");
 		return (1);
 	}
+	(void)close(fd);
 	i = 'A' - 1;
 	while (++i <= 'Z')
 		pool.pcs[i - 'A'].character = i;

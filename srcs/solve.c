@@ -6,7 +6,7 @@
 /*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/18 12:03:33 by ngoguey           #+#    #+#             */
-/*   Updated: 2016/03/04 15:49:31 by ngoguey          ###   ########.fr       */
+/*   Updated: 2016/03/16 11:18:55 by ngoguey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,13 +73,13 @@ static int			loop_sizes(t_map m, t_ppool *const pool)
 	w = ft_sqrtceil(pool->lastpid * 4 + 4);
 	while (1)
 	{
-		if (w * 4 <= sizeof(uintmax_t) * 8)
+		if (w * w <= sizeof(uintmax_t) * 8)
 		{
 			if (flt_solve64(0, pool, w, 0)
 				&& write_map_bitwise_solve(m, pool))
 				break ;
 		}
-		else if (w * 4 <= sizeof(__uint128_t) * 8)
+		else if (w * w <= sizeof(__uint128_t) * 8)
 		{
 			if (flt_solve128(0, pool, w, 0)
 				&& write_map_bitwise_solve(m, pool))
